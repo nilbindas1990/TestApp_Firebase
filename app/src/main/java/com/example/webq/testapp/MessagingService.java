@@ -1,5 +1,7 @@
 
 //http://www.androiddeft.com/2017/11/18/push-notification-android-firebase-php/
+//https://github.com/firebase/quickstart-android/issues/88
+//https://medium.com/@cdmunoz/working-easily-with-fcm-push-notifications-in-android-e1804c80f74
 package com.example.webq.testapp;
 
 import android.app.Notification;
@@ -24,11 +26,13 @@ import java.net.URL;
 import java.util.Random;
 
 public class MessagingService extends FirebaseMessagingService {
+    String TAG = "Firebasemsg";
     Bitmap bitmap;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        //super.onMessageReceived(remoteMessage);
-        Log.d("From", remoteMessage.getFrom());
+        super.onMessageReceived(remoteMessage);
+        Log.d("Hello","hello");
+
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
         //String imageUri = "https://webqueuesolution.com/samples/projects/sandip/android_development/uploads/push-notification/1547467726Chrysanthemum.jpg";
@@ -37,9 +41,6 @@ public class MessagingService extends FirebaseMessagingService {
         bitmap = getBitmapfromUrl(body);
 
             showNotification(title,bitmap);
-
-
-
         //Log.d("Firebase_img",imageUri);
 
     }
@@ -99,5 +100,4 @@ public class MessagingService extends FirebaseMessagingService {
         super.onNewToken(s);
         Log.d("token",s);
     }
-
 }
