@@ -1,3 +1,5 @@
+
+//http://www.androiddeft.com/2017/11/18/push-notification-android-firebase-php/
 package com.example.webq.testapp;
 
 import android.app.Notification;
@@ -6,6 +8,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -14,19 +18,33 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 public class MessagingService extends FirebaseMessagingService {
+    Bitmap bitmap;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        String s = remoteMessage.getNotification().getBody();
-        showNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
-        Log.d("Firebase",s);
+        //super.onMessageReceived(remoteMessage);
+        Log.d("From", remoteMessage.getFrom());
+        String title = remoteMessage.getData().get("title");
+        String body = remoteMessage.getData().get("body");
+        //String imageUri = "https://webqueuesolution.com/samples/projects/sandip/android_development/uploads/push-notification/1547467726Chrysanthemum.jpg";
+
+
+        bitmap = getBitmapfromUrl(body);
+
+            showNotification(title,bitmap);
+
+
+
+        //Log.d("Firebase_img",imageUri);
 
     }
 
-    private void showNotification(String title, String body) {
+    private void showNotification(String title, Bitmap imageUri) {
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHENNEL_ID = "com.example.webq.firebaseexample";
@@ -50,16 +68,36 @@ public class MessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_notification_msg)
                 .setContentTitle(title)
-                .setContentText(body)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notification_msg))
+                //.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(imageUri))
+                //.setContentText(body)
                 .setContentInfo("Info");
         notificationManager.notify(new Random().nextInt(),notificationBuilder.build());
+    }
+
+    public Bitmap getBitmapfromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+
+        }
     }
 
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
+        Log.d("token",s);
     }
 
 }
