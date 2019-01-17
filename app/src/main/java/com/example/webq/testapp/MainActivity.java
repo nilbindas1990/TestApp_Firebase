@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -43,18 +44,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseMessaging.getInstance().subscribeToTopic("general")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "success";
-                        if (!task.isSuccessful()) {
-                            msg = "failed";
-                        }
-                        Log.d("Firebase", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        FirebaseMessaging.getInstance().subscribeToTopic("general")
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        String msg = "success";
+//                        if (!task.isSuccessful()) {
+//                            msg = "failed";
+//                        }
+//                        Log.d("Firebase", msg);
+//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
     }
 }
